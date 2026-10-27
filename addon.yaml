@@ -1,0 +1,36 @@
+# IPMI integration: one entry per machine with a BMC (iDRAC, iLO, Supermicro IPMI...).
+# Shows power state and the BMC's sensors (temperatures, fans, voltages, power), and powers
+# machines on, off gracefully, off hard, cycles or resets them. Modeled on the Home Assistant
+# IPMI integration by Adrian Teodorescu (MIT). Add a machine from its dashboard page, or:
+#   hisho addon entry ipmi big-box address=10.0.0.50 user=ADMIN password=HISHO_BIGBOX_IPMI_PASSWORD
+name: ipmi
+kind: integration
+secret_rotate: the machine's BMC web page > User Management
+title: IPMI
+description: Power control and health (temperatures, fans, voltages) for machines with a BMC.
+version: 0.2.1
+you_need:
+  - "A server with a BMC (iDRAC, iLO, Supermicro IPMI...) on your network"
+  - "A BMC user name and password"
+provider: provider.py
+entry_form:
+  address: "BMC address"
+  user: "User name"
+  password: "Password"
+  interface: "Interface (lanplus for most; lan for old BMCs)"
+  power_only: "Power only (skip sensors)"
+  ignore: "Sensors to hide (e.g. FAN2,FAN5)"
+  note: "Note"
+entry_label: IPMI machine
+entry_schema:
+  address: str             # the BMC's address
+  user: "str?"             # BMC user name (or user_ref for a secret)
+  user_ref: "secret?"
+  password: password       # type it on the page (kept in Core's local secrets file) or give a secret's name
+  interface: "list(lanplus|lan)?"
+  cipher: "int?"
+  power_only: "bool?"      # skip sensors (for BMCs with a limited command set)
+  ignore: "str?"           # sensors to leave out, comma-separated (e.g. empty fan headers: FAN2,FAN5)
+  note: "str?"
+requires:
+  commands: [ipmitool]
