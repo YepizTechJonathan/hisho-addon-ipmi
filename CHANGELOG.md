@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.3.0
+
+- Found on your network: the page lists the BMCs that answer IPMI's presence ping (RMCP, UDP 623); Use this fills
+  the address. No Sign in once: IPMI signs in with the BMC user each time, so that user and password are what Hisho keeps.
+- Setup help says so.
+
 ## 0.2.2
 
 - Every field on its setup form says in plain words what it is, and links to where to get it (addon.yaml `help:`, shown by Hisho's dashboard).

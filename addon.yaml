@@ -2,13 +2,13 @@
 # Shows power state and the BMC's sensors (temperatures, fans, voltages, power), and powers
 # machines on, off gracefully, off hard, cycles or resets them. Modeled on the Home Assistant
 # IPMI integration by Adrian Teodorescu (MIT). Add a machine from its dashboard page, or:
-#   hisho addon entry ipmi big-box address=10.0.0.50 user=ADMIN password=HISHO_BIGBOX_IPMI_PASSWORD
+#   hisho addon entry ipmi big-box address=192.0.2.50 user=ADMIN password=HISHO_BIGBOX_IPMI_PASSWORD
 name: ipmi
 kind: integration
 secret_rotate: the machine's BMC web page > User Management
 title: IPMI
 description: Power control and health (temperatures, fans, voltages) for machines with a BMC.
-version: 0.2.2
+version: 0.3.0
 you_need:
   - "A server with a BMC (iDRAC, iLO, Supermicro IPMI...) on your network"
   - "A BMC user name and password"
@@ -22,6 +22,8 @@ entry_form:
   ignore: "Sensors to hide (e.g. FAN2,FAN5)"
   note: "Note"
 entry_label: IPMI machine
+discover:                  # Found on your network: BMCs answer IPMI's presence ping (RMCP, UDP 623)
+  - {rmcp: 623, title: "BMC at {ip}", fill: {address: "{ip}"}}
 entry_schema:
   address: str             # the BMC's address
   user: "str?"             # BMC user name (or user_ref for a secret)
@@ -37,12 +39,12 @@ requires:
 help:
   address:
     label: BMC address
-    say: "The address of the server's management chip (iDRAC, iLO or Supermicro IPMI), like 192.0.2.50. It is a separate port with its own address: find it in the server's BIOS setup or in your router's list of devices."
+    say: "The address of the server's management chip (iDRAC, iLO or Supermicro IPMI), like 192.0.2.50. Found on your network fills it in: press Use this. It is a separate port with its own address; if it isn't found, look in the server's BIOS setup or in your router's list of devices."
     get: "{address}"
     get_label: Open the BMC's web page
   user:
     label: BMC user name
-    say: "A user on the BMC with Administrator rights (the power buttons need them). Users are made on the BMC's web page, under Users or User Management."
+    say: "A user on the BMC with Administrator rights (the power buttons need them). IPMI signs in with this user every time, so Hisho keeps it (the password only on the Core machine); there is no token to make instead. Users are made on the BMC's web page, under Users or User Management."
     get: "{address}"
     get_label: Open the BMC's web page
   password:

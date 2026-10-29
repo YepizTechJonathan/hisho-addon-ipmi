@@ -44,11 +44,13 @@ Its card shows each machine's power and any critical sensor. Its page (**Add-ons
 
 ## Settings
 
-Add a machine on its page (**Add-ons > IPMI > + add**): the BMC's address, user name and password,
+Add a machine on its page (**Add-ons > IPMI**). **Found on your network** lists the BMCs that answer
+IPMI's presence ping (UDP 623); **Use this** opens the form with the address filled in. Then type the
+BMC's user name and password,
 the interface (`lanplus` for most, `lan` for old BMCs), and sensors to hide (e.g. empty fan headers
 `FAN2,FAN5`). Test checks the BMC before saving; a typed password is kept only on the Core machine
 (`~/.hisho-secrets.env`), or give a secret's name. From a terminal:
-`hisho addon entry ipmi big-box address=10.0.0.50 user=ADMIN password=HISHO_BIGBOX_IPMI_PASSWORD`.
+`hisho addon entry ipmi big-box address=192.0.2.50 user=ADMIN password=HISHO_BIGBOX_IPMI_PASSWORD`.
 Entries are kept in `~/Hisho/System/Config/Addons/ipmi.yaml`. To change a password: the machine's
 BMC web page > User Management.
 

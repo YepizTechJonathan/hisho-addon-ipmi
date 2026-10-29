@@ -127,3 +127,13 @@ def test_bmc_errors_are_said_in_plain_words(fleet, monkeypatch):
                         lambda self, ipmi, verb: {"ok": False, "stderr": "cipher 17: Error: Unable to establish IPMI v2 / RMCP+ session"})
     [p] = addons.summarize(ip, ctx_for(ip))["problems"]
     assert p["title"] == "Can't reach big-box's BMC" and "wrong user name or password" in p["detail"]
+
+
+def test_found_on_your_network_pings_for_bmcs_and_fills_the_address(addon):
+    from hisho import connect as hconnect
+    assert addons.validate_manifest(addon.manifest) == []
+    assert addon.manifest["discover"] == [{"rmcp": 623, "title": "BMC at {ip}", "fill": {"address": "{ip}"}}]
+    assert "connect" not in addon.manifest            # IPMI needs the BMC's own user each time
+    rmcp = lambda ip, port: ip == "192.0.2.50" and port == 623
+    got = hconnect.scan(addon, ["192.0.2.48/29"], tcp=lambda *a: False, http=lambda *a: False, rmcp=rmcp, workers=2)
+    assert got == [{"ip": "192.0.2.50", "title": "BMC at 192.0.2.50", "fill": {"address": "192.0.2.50"}}]
