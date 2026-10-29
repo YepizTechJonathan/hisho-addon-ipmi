@@ -8,7 +8,7 @@ kind: integration
 secret_rotate: the machine's BMC web page > User Management
 title: IPMI
 description: Power control and health (temperatures, fans, voltages) for machines with a BMC.
-version: 0.2.1
+version: 0.2.2
 you_need:
   - "A server with a BMC (iDRAC, iLO, Supermicro IPMI...) on your network"
   - "A BMC user name and password"
@@ -34,3 +34,28 @@ entry_schema:
   note: "str?"
 requires:
   commands: [ipmitool]
+help:
+  address:
+    label: BMC address
+    say: "The address of the server's management chip (iDRAC, iLO or Supermicro IPMI), like 192.0.2.50. It is a separate port with its own address: find it in the server's BIOS setup or in your router's list of devices."
+    get: "{address}"
+    get_label: Open the BMC's web page
+  user:
+    label: BMC user name
+    say: "A user on the BMC with Administrator rights (the power buttons need them). Users are made on the BMC's web page, under Users or User Management."
+    get: "{address}"
+    get_label: Open the BMC's web page
+  password:
+    label: BMC password
+    say: "That user's password. Change it on the BMC's web page if it is still the factory one."
+    get: "{address}"
+    get_label: Open the BMC's web page
+  interface:
+    say: "Leave lanplus for nearly every server. Pick lan only for very old BMCs that refuse lanplus."
+  power_only:
+    say: "Set true if the BMC errors on sensor readings: Hisho then shows power and its buttons only."
+  ignore:
+    label: Sensors to hide
+    say: "Optional. Sensor names separated by commas, like FAN2,FAN5, for empty fan headers or readings that always look wrong."
+  note:
+    say: "Anything you want to remember about this machine, like where it is."
